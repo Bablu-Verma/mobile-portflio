@@ -1,3 +1,4 @@
+import { Button } from '@/components/Button';
 import { personalInfo, stats } from '@/constants/data';
 import { useTheme } from '@/context/ThemeContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -6,7 +7,6 @@ import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
     Linking,
-    Pressable,
     Text,
     View,
     useWindowDimensions,
@@ -53,15 +53,15 @@ function useTypewriter(words: string[]) {
 export function HeroSection() {
     const typedText = useTypewriter(phrases);
     const { colors } = useTheme();
-    const { height } = useWindowDimensions(); // ✅ Screen height
+    const { height } = useWindowDimensions();
 
     const openUrl = (url: string) =>
         Linking.openURL(url).catch(() => { });
 
     return (
         <View
-            className="px-5 pt-16 pb-5 justify-center"
-            style={{ minHeight: height * 0.8 }} // ✅ FIXED HEIGHT
+            className="px-5 pt-16 pb-5 justify-around"
+
         >
             {/* Background Gradient */}
             <LinearGradient
@@ -78,7 +78,7 @@ export function HeroSection() {
                 }}
             />
 
-            <View className="items-center justify-evenly relative">
+            <View className="items-center justify-evenly relative min-h-[80vh]" >
                 {/* Tagline Badge */}
                 <View
                     className="flex-row items-center rounded-full border px-4 py-2 mb-6"
@@ -143,85 +143,34 @@ export function HeroSection() {
                 </View>
 
                 {/* Social Icons */}
-                <View className="flex-row items-center mb-8">
-                    <Pressable
-                        onPress={() => openUrl(personalInfo.github)}
-                        className="mx-2 rounded-full border p-3"
-                        style={{
-                            borderColor: colors.border,
-                            backgroundColor: colors.card,
-                        }}
-                    >
-                        <Ionicons
-                            name="logo-github"
-                            size={18}
-                            color={colors.foreground}
-                        />
-                    </Pressable>
-
-                    <Pressable
-                        onPress={() => openUrl(personalInfo.linkedin)}
-                        className="mx-2 rounded-full border p-3"
-                        style={{
-                            borderColor: colors.border,
-                            backgroundColor: colors.card,
-                        }}
-                    >
-                        <Ionicons
-                            name="logo-linkedin"
-                            size={18}
-                            color={colors.foreground}
-                        />
-                    </Pressable>
-                    <Pressable
-                        onPress={() => openUrl(personalInfo.site)}
-                        className="mx-2 rounded-full border p-3"
-                        style={{
-                            borderColor: colors.border,
-                            backgroundColor: colors.card,
-                        }}
-                    >
-                        <Ionicons
-                            name="link"
-                            size={18}
-                            color={colors.foreground}
-                        />
-                    </Pressable>
+                <View className="flex-row items-center mb-8 gap-3">
+                    <Button variant="social" size="md" rounded="full" icon="logo-github" onPress={() => openUrl(personalInfo.github)} />
+                    <Button variant="social" size="md" rounded="full" icon="logo-linkedin" onPress={() => openUrl(personalInfo.linkedin)} />
+                    <Button variant="social" size="md" rounded="full" icon="link" onPress={() => openUrl(personalInfo.site)} />
                 </View>
 
                 {/* CTA Buttons */}
-                <View className="flex-row w-full max-w-[280px] justify-between mb-4">
-                    <Pressable
+                <View className="flex-row w-full justify-center items-center max-w-[280px] gap-3 mb-4">
+                    <Button
+                        variant="primary"
+                        size="md"
+                        icon="download"
                         onPress={() => openUrl(personalInfo.resumeUrl)}
-                        className="flex-row items-center justify-center rounded-xl px-4 py-3 flex-1 mr-2"
-                        style={{ backgroundColor: colors.primary }}
+                        fullWidth
                     >
-                        <Ionicons name="download" size={18} color="#fff" />
-                        <Text className="ml-2 text-base font-semibold text-white">
-                            Resume
-                        </Text>
-                    </Pressable>
+                        Resume
+                    </Button>
 
-                    <Pressable
+                    <Button
+                        variant="outline"
+                        size="md"
+                        icon="arrow-forward"
+                        iconPosition="right"
                         onPress={() => router.navigate('/contact')}
-                        className="flex-row items-center justify-center rounded-xl px-4 py-3 flex-1 ml-2 border"
-                        style={{
-                            borderColor: colors.border,
-                            backgroundColor: colors.card,
-                        }}
+                        fullWidth
                     >
-                        <Ionicons
-                            name="arrow-forward"
-                            size={18}
-                            color={colors.primary}
-                        />
-                        <Text
-                            className="ml-2 text-base font-semibold"
-                            style={{ color: colors.primary }}
-                        >
-                            Contact
-                        </Text>
-                    </Pressable>
+                        Contact
+                    </Button>
                 </View>
 
                 {/* Stats */}

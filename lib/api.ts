@@ -1,11 +1,12 @@
 import type {
   AboutData,
-  Education,
+  EducationResponse,
   Experience,
   FAQItem,
   GalleryImage,
   Project,
   Service,
+  SkillGroup,
   Testimonial,
   WorkflowStep,
 } from '@/types';
@@ -52,9 +53,9 @@ export function useExperiences() {
 }
 
 export function useEducation() {
-  return useQuery<Education[]>({
+  return useQuery<EducationResponse>({
     queryKey: ['education'],
-    queryFn: () => fetcher<Education[]>(`${API_BASE}/education`),
+    queryFn: () => fetcher<EducationResponse>(`${API_BASE}/education`),
   });
 }
 
@@ -76,6 +77,13 @@ export function useFaqs() {
   return useQuery<FAQItem[]>({
     queryKey: ['faqs'],
     queryFn: () => fetcher<FAQItem[]>(`${API_BASE}/faqs`),
+  });
+}
+
+export function useSkills() {
+  return useQuery<SkillGroup[]>({
+    queryKey: ['skills'],
+    queryFn: () => fetcher<SkillGroup[]>(`${API_BASE}/skills`),
   });
 }
 

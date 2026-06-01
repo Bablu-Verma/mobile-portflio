@@ -54,11 +54,13 @@ export function ServicesSection() {
                             <Text className="text-xs leading-4 mb-3" style={{ color: colors.mutedForeground }}>
                                 {service.description}
                             </Text>
-                            <View className="flex-row flex-wrap">
+                            {service.tech && service.tech.length > 0 && (
+                              <View className="flex-row flex-wrap">
                                 {service.tech.map((t, i) => (
                                     <SkillBadge key={i} label={t} />
                                 ))}
-                            </View>
+                              </View>
+                            )}
                         </View>
                     );
                 })}

@@ -1,12 +1,12 @@
+import { ThemedSafeArea, ThemedScrollView } from '@/components/ThemedWrappers';
+import { Button } from '@/components/Button';
 import { SkillBadge } from '@/components/SkillBadge';
 import { useTheme } from '@/context/ThemeContext';
 import { useProjectBySlug } from '@/lib/api';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Dimensions, Image, Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Dimensions, Image, Linking, Text, View } from 'react-native';
 
 export default function ProjectDetailScreen() {
     const router = useRouter();
@@ -16,28 +16,24 @@ export default function ProjectDetailScreen() {
 
     if (isLoading) {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-                <StatusBar style={colors.background === '#0d0d0f' ? 'light' : 'dark'} />
-                <View className="flex-1 items-center justify-center">
+            <ThemedSafeArea>
+                <View className="flex-1 items-center justify-center px-8">
                     <View className="h-12 w-12 rounded-full animate-spin" style={{ backgroundColor: colors.primary, opacity: 0.3 }} />
                     <Text className="mt-4 text-base" style={{ color: colors.mutedForeground }}>Loading project...</Text>
                 </View>
-            </SafeAreaView>
+            </ThemedSafeArea>
         );
     }
 
     if (!project) {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-                <StatusBar style={colors.background === '#0d0d0f' ? 'light' : 'dark'} />
+            <ThemedSafeArea>
                 <View className="flex-1 items-center justify-center px-8">
                     <Text className="text-4xl mb-3">🔍</Text>
                     <Text className="text-base font-semibold text-center" style={{ color: colors.foreground }}>Project not found</Text>
-                    <Pressable onPress={() => router.back()} className="mt-4 px-6 py-3 rounded-xl" style={{ backgroundColor: colors.primary }}>
-                        <Text className="text-white font-semibold">Go Back</Text>
-                    </Pressable>
+                    <Button onPress={() => router.back()} variant="primary" className="mt-4">Go Back</Button>
                 </View>
-            </SafeAreaView>
+            </ThemedSafeArea>
         );
     }
 
@@ -56,80 +52,97 @@ export default function ProjectDetailScreen() {
     );
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-            <StatusBar style={colors.background === '#0d0d0f' ? 'light' : 'dark'} />
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
-                <View className="relative">
-                    <Image source={{ uri: project.image }} style={{ width: screenWidth, height: 220 }} resizeMode="cover" />
-                    <View className="absolute inset-0" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }} />
-                    <Pressable onPress={() => router.back()} className="absolute top-12 left-5 p-2 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
-                        <Ionicons name="arrow-back" size={20} color="white" />
-                    </Pressable>
-                </View>
+        <ThemedSafeArea><ThemedScrollView contentContainerStyle={{ paddingBottom: 40 }}>
+            <View className="relative">
+                <Image source={{ uri: project.image }} style={{ width: screenWidth, height: 220 }} resizeMode="cover" />
+                <View className="absolute inset-0" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }} />
+                <Button variant="ghost" size="sm" icon="arrow-back" rounded="full" onPress={() => router.back()} style={{ position: 'absolute', top: 48, left: 20, backgroundColor: 'rgba(255,255,255,0.2)' }} />
+            </View>
 
-                <View className="px-5 -mt-6">
-                    <View className="rounded-2xl border p-6" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                        <Text className="text-2xl font-bold" style={{ color: colors.foreground }}>{project.title}</Text>
-                        <Text className="text-base mt-2 leading-6" style={{ color: colors.mutedForeground }}>{project.overview}</Text>
+            <View className="px-5 -mt-6">
+                <View className="rounded-2xl border p-6" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                    <Text className="text-2xl font-bold" style={{ color: colors.foreground }}>{project.title}</Text>
+                    <Text className="text-base mt-2 leading-6" style={{ color: colors.mutedForeground }}>{project.shortDescription}</Text>
 
+
+                    <View className="flex-row gap-3 mt-4">
                         {project.liveUrl && project.liveUrl !== '#' && (
-                            <Pressable className="mt-4 flex-row items-center self-start px-4 py-2 rounded-xl" style={{ backgroundColor: colors.primary }}>
-                                <Ionicons name="open-outline" size={16} color="white" />
-                                <Text className="ml-2 text-base font-semibold text-white">View Live</Text>
-                            </Pressable>
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                icon="open-outline"
+                                onPress={() => Linking.openURL(project.liveUrl!)}
+                            >
+                                Live
+                            </Button>
+                        )}
+                        {project.githubUrl && (
+                            <Button
+                                variant="social"
+                                size="sm"
+                                icon="logo-github"
+                                onPress={() => Linking.openURL(project.githubUrl!)}
+                            >
+                                Code
+                            </Button>
                         )}
                     </View>
+                </View>
 
-                    <View className="mt-6">
-                        <SectionBlock title="Tech Stack" icon="code-slash">
-                            <View className="rounded-2xl border p-4 flex-row flex-wrap" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                                {project.tags.map((tag, i) => (
-                                    <SkillBadge key={i} label={tag} />
+                <View className="mt-6">
+                    <SectionBlock title="Overview" icon="file-text">
+                        <View className="rounded-2xl border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                            <Text className="text-base leading-6" style={{ color: colors.mutedForeground }}>{project.overview}</Text>
+                        </View>
+                    </SectionBlock>
+                    <SectionBlock title="Tech Stack" icon="code-slash">
+                        <View className="rounded-2xl border p-4 flex-row flex-wrap" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                            {project.tags.map((tag, i) => (
+                                <SkillBadge key={i} label={tag} />
+                            ))}
+                        </View>
+                    </SectionBlock>
+
+                    {project.challenges.length > 0 && (
+                        <SectionBlock title="Challenges" icon="alert-circle">
+                            <View className="rounded-2xl border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                                {project.challenges.map((item, i) => (
+                                    <View key={i} className="flex-row items-start mb-3 last:mb-0">
+                                        <View className="h-1.5 w-1.5 rounded-full mt-2 mr-3" style={{ backgroundColor: colors.destructive }} />
+                                        <Text className="text-base flex-1 leading-5" style={{ color: colors.foreground }}>{item}</Text>
+                                    </View>
                                 ))}
                             </View>
                         </SectionBlock>
+                    )}
 
-                        {project.challenges.length > 0 && (
-                            <SectionBlock title="Challenges" icon="alert-circle">
-                                <View className="rounded-2xl border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                                    {project.challenges.map((item, i) => (
-                                        <View key={i} className="flex-row items-start mb-3 last:mb-0">
-                                            <View className="h-1.5 w-1.5 rounded-full mt-2 mr-3" style={{ backgroundColor: colors.destructive }} />
-                                            <Text className="text-base flex-1 leading-5" style={{ color: colors.foreground }}>{item}</Text>
-                                        </View>
-                                    ))}
-                                </View>
-                            </SectionBlock>
-                        )}
+                    {project.solutions.length > 0 && (
+                        <SectionBlock title="Solutions" icon="checkmark-circle">
+                            <View className="rounded-2xl border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                                {project.solutions.map((item, i) => (
+                                    <View key={i} className="flex-row items-start mb-3 last:mb-0">
+                                        <View className="h-1.5 w-1.5 rounded-full mt-2 mr-3" style={{ backgroundColor: colors.primary }} />
+                                        <Text className="text-base flex-1 leading-5" style={{ color: colors.foreground }}>{item}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </SectionBlock>
+                    )}
 
-                        {project.solutions.length > 0 && (
-                            <SectionBlock title="Solutions" icon="checkmark-circle">
-                                <View className="rounded-2xl border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                                    {project.solutions.map((item, i) => (
-                                        <View key={i} className="flex-row items-start mb-3 last:mb-0">
-                                            <View className="h-1.5 w-1.5 rounded-full mt-2 mr-3" style={{ backgroundColor: colors.primary }} />
-                                            <Text className="text-base flex-1 leading-5" style={{ color: colors.foreground }}>{item}</Text>
-                                        </View>
-                                    ))}
-                                </View>
-                            </SectionBlock>
-                        )}
-
-                        {project.results.length > 0 && (
-                            <SectionBlock title="Results" icon="trending-up">
-                                <View className="rounded-2xl border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                                    {project.results.map((item, i) => (
-                                        <View key={i} className="flex-row items-start mb-3 last:mb-0">
-                                            <Ionicons name="star" size={14} color={colors.accent} style={{ marginTop: 2, marginRight: 8 }} />
-                                            <Text className="text-base flex-1 leading-5" style={{ color: colors.foreground }}>{item}</Text>
-                                        </View>
-                                    ))}
-                                </View>
-                            </SectionBlock>
-                        )}
-                    </View>
+                    {project.results.length > 0 && (
+                        <SectionBlock title="Results" icon="trending-up">
+                            <View className="rounded-2xl border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                                {project.results.map((item, i) => (
+                                    <View key={i} className="flex-row items-start mb-3 last:mb-0">
+                                        <Ionicons name="star" size={14} color={colors.accent} style={{ marginTop: 2, marginRight: 8 }} />
+                                        <Text className="text-base flex-1 leading-5" style={{ color: colors.foreground }}>{item}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </SectionBlock>
+                    )}
                 </View>
-            </ScrollView>
-        </SafeAreaView>
+            </View>
+        </ThemedScrollView></ThemedSafeArea>
     );
 }

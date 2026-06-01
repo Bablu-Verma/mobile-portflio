@@ -52,5 +52,23 @@
     "eslint-config-expo": "~10.0.0",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "optionalDependencies": {
+    "lightningcss-linux-x64-gnu": "^1.29.3"
+  },
+  "private": true,
+  "description": "This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bablu-Verma/mobile-portflio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bablu-Verma/mobile-portflio/issues"
+  },
+  "homepage": "https://github.com/Bablu-Verma/mobile-portflio#readme"
 }

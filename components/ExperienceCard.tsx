@@ -39,11 +39,11 @@ export function ExperienceCard({ experience }: Props) {
                         <View className="flex-row items-center">
                             <Ionicons name="calendar" size={12} color={colors.mutedForeground} />
                             <Text className="text-xs ml-1" style={{ color: colors.mutedForeground }}>
-                                {experience.startDate} - {experience.current ? 'Present' : experience.endDate}
+                                {experience.startDate} - {experience.current ? 'Present' : experience.endDate ?? ''}
                             </Text>
                         </View>
                     </View>
-                    <Text className="text-base mt-3 leading-5" style={{ color: colors.mutedForeground }}>
+                    <Text className="text-base mt-3 line-clamp-3 leading-5" style={{ color: colors.mutedForeground }}>
                         {experience.description}
                     </Text>
                     <View className="mt-3 flex-row items-center" style={{ gap: 4 }}>

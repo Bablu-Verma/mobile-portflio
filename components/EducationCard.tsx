@@ -28,9 +28,11 @@ export function EducationCard({ education }: Props) {
                     <Text className="text-xs mt-1" style={{ color: colors.mutedForeground }}>
                         {education.startDate} - {education.endDate}
                     </Text>
-                    <Text className="text-base mt-2 leading-5" style={{ color: colors.mutedForeground }}>
-                        {education.description}
-                    </Text>
+                    {education.description && (
+                        <Text className="text-base mt-2 leading-5 line-clamp-3" style={{ color: colors.mutedForeground }}>
+                            {education.description}
+                        </Text>
+                    )}
                 </View>
             </View>
         </View>

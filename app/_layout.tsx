@@ -22,6 +22,7 @@ export default function RootLayout() {
           <Stack.Screen name="gallery" />
           <Stack.Screen name="experience/[id]" />
           <Stack.Screen name="project/[slug]" />
+          <Stack.Screen name="education/[id]" />
         </Stack>
       </ThemeProvider>
     </QueryClientProvider>
